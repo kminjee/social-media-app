@@ -1,0 +1,7 @@
+
+에러 처리
+
+1. There are multiple modules with names that only differ in casing. (대소문자만 다른 이름을 가진 여러 모듈이 있다.)
+
+  : import React from "React" -> import React from "react"
+

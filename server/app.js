@@ -1,8 +1,7 @@
-const http = require('http'); // node가 http 모듈을 제공
+const express = require('express');
 
-http.createServer(() => {
-  console.log(req.url, req.mtehod);
-  res.end('Hello!')
-});
+const app = express();
 
-http.listen(3030);
+app.listen(3030, () => {
+  console.log('3030 포트번호로 서버 실행 중..');
+})

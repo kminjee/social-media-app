@@ -1,4 +1,8 @@
-# client
+# all
 node_modules
 
+# client
+.next
+
 # server
+.env
