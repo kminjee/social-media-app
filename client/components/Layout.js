@@ -11,13 +11,15 @@ const StyledNav = Styled.div`
   align-items: center;
   box-sizing: border-box;
   max-width: 50rem;
+  min-width: 18.75rem;
   width: 80%;
   margin: 0 auto;
   padding: 1rem 0;
 
   & a {
     text-decoration: none;
-    color: #000;
+    font-size: 0.875rem;
+    color: #666;
   }
 `;
 

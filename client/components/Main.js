@@ -9,6 +9,7 @@ import Post from "./Post";
 const StyledWrap = Styled.div`
   box-sizing: border-box;
   max-width: 50rem;
+  min-width: 18.75rem;
   width: 80%;
   height 100%;
   margin: 0 auto;
