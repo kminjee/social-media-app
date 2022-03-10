@@ -16,13 +16,16 @@ const StyledWrap = Styled.div`
 `
 const Main = () => {
   
-  const { posts } = useSelector((state) => state.post)  
+  const { allPost } = useSelector((state) => state.post);
+
   return (
     <StyledWrap>
       <PostForm />
-      <Post posts={posts} />
+      {allPost?.map(post => 
+        <Post key={post.id} post={post} />
+      )}
     </StyledWrap>
   )
-}
+};
 
 export default Main;

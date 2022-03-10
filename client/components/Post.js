@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
 import Styled from "styled-components";
 
@@ -77,7 +78,7 @@ const StyledComment = Styled.div`
 `
 moment.locale('ko');
 
-const Post = ({ posts }) => {
+const Post = ({ post }) => {
 
   const [commentBox, setCommentBox] = useState(false)
   const onToggle = useCallback(() => {
@@ -85,36 +86,43 @@ const Post = ({ posts }) => {
   }, [])
 
   return(
-    <>
-      {posts.map(post => 
-        <StyledPost key={post.id}>
-          <div className="info">
-            <div><Avatar /></div>
-            <div className="name-date">
-              <div className="name">{post.User.name}</div>
-              <div className="date">{moment().format('YYYY.MM.DD')}</div>
-            </div>
+    <> 
+      <StyledPost key={post.id}>
+        <div className="info">
+          <div><Avatar /></div>
+          <div className="name-date">
+            <div className="name">{post.User.name}</div>
+            <div className="date">{moment().format('YYYY.MM.DD')}</div>
           </div>
-          <div className="content">{post.content}</div>
-          <div className="comment" onClick={onToggle}>
-            <div className="total">댓글 {post.Comments.length}개</div>
-            <div className="btn">댓글 달기</div>
+        </div>
+        <div className="content">{post.content}</div>
+        <div className="comment" onClick={onToggle}>
+          <div className="total">댓글 {post.Comments.length}개</div>
+          <div className="btn">댓글 달기</div>
+        </div>
+        {commentBox && 
+          <div>
+            <CommentForm post={post} />
+            {post.Comments.map(comment => 
+              <StyledComment>
+                <span className="uesrid">{comment.name}</span>
+                <span className="text">{comment.text}</span>
+              </StyledComment>
+            )}
           </div>
-          {commentBox && 
-            <div>
-              <CommentForm />
-              {post.Comments.map(comment => 
-                  <StyledComment key={comment.id}>
-                    <span className="uesrid">{comment.name}</span>
-                    <span className="text">{comment.text}</span>
-                  </StyledComment>
-                )}
-            </div>
-          }
-        </StyledPost>
-      )}
+        }
+      </StyledPost>
     </>
   )
+}
+
+Post.proptypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string,       // 백엔드랑 합치면 number로 바꾸기
+    content: PropTypes.string,
+    User: PropTypes.object,
+    Comments: PropTypes.arrayOf(PropTypes.object)
+  }).isRequired
 }
 
 export default Post;

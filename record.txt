@@ -5,3 +5,7 @@
 
   : import React from "React" -> import React from "react"
 
+
+2. request -> success 로 처리됐는데도 state 변화 없는 경우
+
+  : 원인 - reducer에서 case마다 break를 붙이지 않음.

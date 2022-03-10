@@ -14,7 +14,7 @@ const Home = () => {
     <Layout>
       <Head>
         <meta charSet="utf-8" />
-        <title>{loginDone ? "메인 | 토이스토리" : "로그인 | 토이스토리"}</title>
+        <title>{loginDone ? "메인 | toystory" : "로그인 | toystory"}</title>
       </Head>
       {loginDone ? <Main /> : <Login />}
     </Layout>

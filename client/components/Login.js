@@ -66,28 +66,28 @@ const LoginForm = Styled.form`
 const Login = () => {
 
   const dispatch = useDispatch();
-  const [userId, onChangeUserId] = useInput('');
+  const [userEmail, onChangeUserEmail] = useInput('');
   const [userPassword, onChangeUserPassword] = useInput('');
 
   const onSubmit = useCallback((event) => {
     event.preventDefault();
     dispatch({
       type: LOGIN_REQUEST,
-      data: { userId, userPassword }
+      data: { userEmail, userPassword }
     });
-  }, [userId, userPassword])
+  }, [userEmail, userPassword])
   return (
     <>
       <LoginForm onSubmit={onSubmit}>
         <h1>로그인</h1>
         <div>
-          <label htmlFor="uesr-id"></label>
+          <label htmlFor="uesr-email"></label>
           <input 
-            name="user-id" 
+            name="user-email" 
             type="text" 
-            value={userId}
-            onChange={onChangeUserId}
-            placeholder="아이디를 입력해주세요" 
+            value={userEmail}
+            onChange={onChangeUserEmail}
+            placeholder="이메일을 입력해주세요" 
             autoComplete="off" 
             required 
           />

@@ -77,7 +77,7 @@ const Signup = () => {
 
   const dispatch = useDispatch();
 
-  const [userId, onChangeUserId] = useInput('');
+  const [userEmail, onChangeUserEmail] = useInput('');
   const [userName, onChangeUserName] = useInput('');
   const [userPassword, onChangeUserPassword] = useInput('');
 
@@ -96,7 +96,7 @@ const Signup = () => {
     dispatch({
       type: SIGNUP_REQUEST,
       data: {
-        userId,
+        userEmail,
         userName,
         userPassword
       },
@@ -115,11 +115,11 @@ const Signup = () => {
         <div>
           <label htmlFor="uesr-id"></label>
           <input 
-            name="user-id" 
+            name="user-email" 
             type="text" 
-            placeholder="아이디를 입력해주세요"
-            value={userId}
-            onChange={onChangeUserId}
+            placeholder="이메일을 입력해주세요"
+            value={userEmail}
+            onChange={onChangeUserEmail}
             autoComplete="off" 
             required />
         </div>

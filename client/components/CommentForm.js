@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 
-const StyledForm = Styled.div`
+import useInput from "../hooks/useInput";
+import { ADD_COMMENT_REQUEST } from "../reducer/post";
+
+const StyledForm = Styled.form`
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -41,10 +45,33 @@ const StyledForm = Styled.div`
   }
 `
 
-const CommentForm = () => {
+const CommentForm = ({ post }) => {
+
+  const dispatch = useDispatch();
+  const { info } = useSelector((state) => state.user);
+  const [comment, onChangeComment] = useInput('');
+
+  const onSubmit = useCallback((event) => {
+    event.preventDefault();
+    dispatch({
+      type: ADD_COMMENT_REQUEST,
+      data: {
+        postId: post.id,
+        text: comment,
+        userId: info.id,
+        name: info.name
+      }
+    })
+  }, [comment])
+
   return (
-    <StyledForm>
-      <input type="text" placeholder="댓글을 남겨주세요" />
+    <StyledForm onSubmit={onSubmit}>
+      <input 
+        type="text" 
+        placeholder="댓글을 남겨주세요" 
+        value={comment}
+        onChange={onChangeComment}
+      />
       <button>등록</button>
     </StyledForm>
   )

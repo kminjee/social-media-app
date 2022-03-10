@@ -1,43 +1,75 @@
 import produce from "immer";
 import shortid from "shortid";
 
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
 export const initialState = {
-  postLoading: false,
-  postDone: false,
-  postError: null,
-  posts: []
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+  addPostLoading: false,
+  addPostDone: false,
+  addPostError: null,
+  commentLoading: false,
+  commentDone: false,
+  commentError: null,
+  allPost: []
 }
 
-const dummyPost = (data) => ({
+export const DummyPost = (data) => ({
   id: shortid.generate(),
-  content: data,
+  content: data.content,
+  Comments: [],
   User: {
-    id: shortid.generate(),
-    name: '김사과',
-  },
-  Comments: []
+    id: data.userId,
+    name: data.userName
+  }
 })
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch(action.type) {
     case ADD_POST_REQUEST:
-      draft.postLoading = true;
-      draft.postDone = false;
-      draft.postError = null;
+      draft.addPostLoading = true;
+      draft.addPostDone = false;
+      draft.addPostError = null;
       break;
     case ADD_POST_SUCCESS:
-      draft.postLoading = false;
-      draft.postDone = true;
-      draft.posts.unshift(dummyPost(action.data));
+      draft.addPostLoading = false;
+      draft.addPostDone = true;
+      draft.allPost.unshift(DummyPost(action.data));
+      console.log(action.data);
       break;
     case ADD_POST_FAILURE:
-      draft.postLoading = false;
-      draft.postDone = false;
-      draft.postError = action.error;
+      draft.addPostLoading = false;
+      draft.addPostDone = false;
+      draft.addPostError = action.error;
+
+    case ADD_COMMENT_REQUEST:
+      draft.commentLoading = true;
+      draft.commentDone = false;
+      draft.commentError = null;
+      break;
+    case ADD_COMMENT_SUCCESS:
+      draft.commentLoading = false;
+      draft.commentDone = true;
+      const post = draft.allPost.find((value) => value.id === action.data.postId);
+      post.Comments.unshift(action.data);
+      break;
+    case ADD_COMMENT_FAILURE:
+      draft.commentLoading = false;
+      draft.commentDone = false;
+      draft.commentError = action.error; 
+
     default:
       break;
   };

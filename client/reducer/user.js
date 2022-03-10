@@ -1,5 +1,6 @@
 import produce from "immer";
 import shortid from "shortid";
+import faker from "@faker-js/faker";
 
 
 export const initialState = {
@@ -27,10 +28,12 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
+export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
+
 const DummyUser = (data) => ({
-  userid: data.userId,
-  username: '김사과',
-  userpassword: data.userPassword,
+  id: shortid.generate(),
+  email: data.userId,
+  name: faker.name.findName(),
   Posts: []
 });
 
@@ -83,6 +86,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.logoutDone = false;
       draft.logoutError = action.error;
       break;
+
+    case ADD_POST_TO_ME:
+      draft.info.Posts.unshift({ id: action.data })
 
     default:
       break;
