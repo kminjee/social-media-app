@@ -44,7 +44,7 @@ const StyledForm = Styled.div`
 const CommentForm = () => {
   return (
     <StyledForm>
-      <input type="text" placeholder="댓글을 남겨주세요." />
+      <input type="text" placeholder="댓글을 남겨주세요" />
       <button>등록</button>
     </StyledForm>
   )

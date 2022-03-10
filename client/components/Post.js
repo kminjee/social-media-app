@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
+import moment from "moment";
 import Styled from "styled-components";
 
 import Avatar from "./Avatar";
 import CommentForm from "./CommentForm";
-import Comments from "./Comments";
 
 
 const StyledPost = Styled.div`
@@ -59,31 +59,30 @@ const StyledPost = Styled.div`
   }
 
 `
+const StyledComment = Styled.div`
+  box-sizing: border-box;
+  display: flex;
+  padding: 0.2rem 0;
+  font-size: 0.875rem;
 
-const posts = [
-  {
-    id: 1,
-    name: '김또리',
-    text: '오늘 고구마 과자 먹었다!',
-  },
-  {
-    id: 2,
-    name: '김민지',
-    text: '오늘 강남 갔다 왔다!',
-  },
-  {
-    id: 3,
-    name: '김민아',
-    text: '오늘 드라이브 했다!',
-  },
-]
+  & .uesrid {
+    width: 20%;
+    color: #666;
+  }
+  
+  & .text {
+    width: 80%;
+    color: #666;
+  }
+`
+moment.locale('ko');
 
-const Post = () => {
+const Post = ({ posts }) => {
 
   const [commentBox, setCommentBox] = useState(false)
   const onToggle = useCallback(() => {
     setCommentBox(prev => !prev);
-  })
+  }, [])
 
   return(
     <>
@@ -92,19 +91,24 @@ const Post = () => {
           <div className="info">
             <div><Avatar /></div>
             <div className="name-date">
-              <div className="name">{post.name}</div>
-              <div className="date">2022.03.09</div>
+              <div className="name">{post.User.name}</div>
+              <div className="date">{moment().format('YYYY.MM.DD')}</div>
             </div>
           </div>
-          <div className="content">{post.text}</div>
+          <div className="content">{post.content}</div>
           <div className="comment" onClick={onToggle}>
-            <div className="total">댓글 0개</div>
+            <div className="total">댓글 {post.Comments.length}개</div>
             <div className="btn">댓글 달기</div>
           </div>
           {commentBox && 
             <div>
               <CommentForm />
-              <Comments />
+              {post.Comments.map(comment => 
+                  <StyledComment key={comment.id}>
+                    <span className="uesrid">{comment.name}</span>
+                    <span className="text">{comment.text}</span>
+                  </StyledComment>
+                )}
             </div>
           }
         </StyledPost>

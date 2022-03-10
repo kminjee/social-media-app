@@ -1,7 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Styled from "styled-components";
 
-import Layout from "../components/Layout";
 import PostForm from "./PostForm";
 import Post from "./Post";
 
@@ -14,15 +14,14 @@ const StyledWrap = Styled.div`
   height 100%;
   margin: 0 auto;
 `
-
 const Main = () => {
+  
+  const { posts } = useSelector((state) => state.post)  
   return (
-    <Layout>
-      <StyledWrap>
-        <PostForm />
-        <Post />
-      </StyledWrap>
-    </Layout>
+    <StyledWrap>
+      <PostForm />
+      <Post posts={posts} />
+    </StyledWrap>
   )
 }
 

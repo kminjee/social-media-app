@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
+
+import useInput from "../hooks/useInput";
+import { ADD_POST_REQUEST } from "../reducer/post";
 
 const StyledPostForm = Styled.form`
   box-sizing: border-box;
@@ -7,7 +11,7 @@ const StyledPostForm = Styled.form`
   min-width: 18.75rem;
   width: 100%;
   margin: 0 auto;
-  padding: 1rem 0;
+  padding-bottom: 1rem;
 
   & textarea {
     box-sizing: border-box;
@@ -46,9 +50,29 @@ const StyledPostForm = Styled.form`
 `
 
 const PostForm = () => {
+  
+  const { info } = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const [content, onChangeContent] = useInput('')
+
+  const onSubmit = useCallback((event) => {
+    event.preventDefault();
+    dispatch({
+      type: ADD_POST_REQUEST,
+      data: content
+    })
+  },[content])
+
   return(
-    <StyledPostForm>
-      <textarea cols="80" rows="5" placeholder="오늘 어떤 일이 있었나요?" autoComplete="off" />
+    <StyledPostForm onSubmit={onSubmit}>
+      <textarea 
+        cols="80" 
+        rows="5" 
+        value={content}
+        onChange={onChangeContent}
+        placeholder={info.username+'님, 오늘은 어떤 일이 있었나요?'}
+        autoComplete="off"
+      />
       <button type="submit">등록</button>
     </StyledPostForm>
   )
