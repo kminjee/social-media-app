@@ -4,21 +4,19 @@ import {
   SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, 
   LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
-
 } from "../reducer/user";
 
 
+/* 회원가입 */
 function signupAPI(data) {
-  axios.post('/user', data);
+  return axios.post('/user', data);
 };
 
 function* signup(action) {
   try {
-    // const result = yield call(signupAPI, action.data);
-    yield delay(1000);
+    yield call(signupAPI, action.data);
     yield put({
-      type: SIGNUP_SUCCESS,
-      data: action.data
+      type: SIGNUP_SUCCESS
     });
   } catch (err) {
     console.log(err);
@@ -29,18 +27,19 @@ function* signup(action) {
   }
 };
 
+
+/* 로그인 */
 function loginAPI(data) {
-  axios.post('/login', data);
+  return axios.post('/user/login', data);
 };
 
 function* login(action) {
   console.log(action)
   try {
-    // const result = yield call(loginAPI, action.data);
-    yield delay(1000);
+    const result = yield call(loginAPI, action.data);
     yield put({
       type: LOGIN_SUCCESS,
-      data: action.data
+      data: result.data
     });
   } catch (err) {
     console.log(err);
@@ -51,14 +50,15 @@ function* login(action) {
   }
 };
 
-function logoutAPI(data) {
-  axios.post('/logout', data);
+
+/* 로그아웃 */
+function logoutAPI() {
+  return axios.post('/user/logout');
 };
 
-function* logout(action) {
+function* logout() {
   try {
-    // const result = yield call(logoutAPI, action.data);
-    yield delay(1000);
+    yield call(logoutAPI);
     yield put({
       type: LOGOUT_SUCCESS
     });

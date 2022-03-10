@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -76,33 +76,45 @@ const CheckMessage = Styled.p`
 const Signup = () => {
 
   const dispatch = useDispatch();
+  const { signupDone, signupError } = useSelector((state) => state.user);
 
-  const [userEmail, onChangeUserEmail] = useInput('');
-  const [userName, onChangeUserName] = useInput('');
-  const [userPassword, onChangeUserPassword] = useInput('');
+  const [email, onChangeUserEmail] = useInput('');
+  const [name, onChangeUserName] = useInput('');
+  const [password, onChangeUserPassword] = useInput('');
+
+  useEffect(() => {
+    if (signupDone) {
+      Router.replace('/')
+    }
+  }, [signupDone]);
+
+  useEffect(() => {
+    if (signupError) {
+      alert(signupError)
+    }
+  }, [signupError]);
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordCheckMessage, setPasswordCheckkMessage] = useState(false);
   const onChangeConfirmPassword = useCallback((event) => {
     setConfirmPassword(event.target.value);
-    setPasswordCheckkMessage(event.target.value !== userPassword);
-  }, [userPassword]);
+    setPasswordCheckkMessage(event.target.value !== password);
+  }, [password]);
 
   const onSubmit = useCallback((e) => {
     e.preventDefault();
-    if (userPassword !== confirmPassword) {
+    if (password !== confirmPassword) {
       return setPasswordCheckkMessage(true)
     }
     dispatch({
       type: SIGNUP_REQUEST,
       data: {
-        userEmail,
-        userName,
-        userPassword
-      },
+        email,
+        name,
+        password
+      }
     });
-    Router.replace('/')
-  }, [userPassword, confirmPassword])
+  }, [password, confirmPassword])
 
   return (
     <>
@@ -118,7 +130,7 @@ const Signup = () => {
             name="user-email" 
             type="text" 
             placeholder="이메일을 입력해주세요"
-            value={userEmail}
+            value={email}
             onChange={onChangeUserEmail}
             autoComplete="off" 
             required />
@@ -130,7 +142,7 @@ const Signup = () => {
             type="text" 
             placeholder="이름을 입력해주세요" 
             autoComplete="off" 
-            value={userName}
+            value={name}
             onChange={onChangeUserName}
             required 
           />
@@ -140,7 +152,7 @@ const Signup = () => {
           <input 
             name="user-password" 
             type="password" 
-            value={userPassword}
+            value={password}
             onChange={onChangeUserPassword}
             placeholder="비밀번호를 입력해주세요" 
             autoComplete="off" 

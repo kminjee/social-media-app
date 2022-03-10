@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 
+import useInput from "../hooks/useInput";
 import { ADD_POST_REQUEST } from "../reducer/post";
 
 const StyledPostForm = Styled.form`
@@ -52,23 +53,15 @@ const PostForm = () => {
   
   const { info } = useSelector((state) => state.user)
   const dispatch = useDispatch();
-  const [content, setContent] = useState('')
 
-  const onChange = useCallback((event) => {
-    setContent(event.target.value);
-  }, [content]);
+  const [content, onChangeContent] = useInput('')
 
   const onSubmit = useCallback((event) => {
     event.preventDefault();
     dispatch({
       type: ADD_POST_REQUEST,
-      data: {
-        content: content,
-        userId: info.id,
-        userName: info.name
-      }
+      data: content,
     });
-    setContent("");
   },[content]);
 
   return(
@@ -77,7 +70,7 @@ const PostForm = () => {
         cols="80" 
         rows="5" 
         value={content}
-        onChange={onChange}
+        onChange={onChangeContent}
         placeholder={info.name+'님, 오늘은 어떤 일이 있었나요?'}
         autoComplete="off"
       />

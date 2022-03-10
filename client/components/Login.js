@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import Styled from "styled-components";
@@ -66,16 +66,24 @@ const LoginForm = Styled.form`
 const Login = () => {
 
   const dispatch = useDispatch();
-  const [userEmail, onChangeUserEmail] = useInput('');
-  const [userPassword, onChangeUserPassword] = useInput('');
+  const { loginError } = useSelector((state) => state.user)
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
+
+  useEffect(() => {
+    if (loginError) {
+      alert(loginError);
+    }
+  }, [loginError]);
 
   const onSubmit = useCallback((event) => {
     event.preventDefault();
     dispatch({
       type: LOGIN_REQUEST,
-      data: { userEmail, userPassword }
+      data: { email, password }
     });
-  }, [userEmail, userPassword])
+  }, [email, password]);
+
   return (
     <>
       <LoginForm onSubmit={onSubmit}>
@@ -85,8 +93,8 @@ const Login = () => {
           <input 
             name="user-email" 
             type="text" 
-            value={userEmail}
-            onChange={onChangeUserEmail}
+            value={email}
+            onChange={onChangeEmail}
             placeholder="이메일을 입력해주세요" 
             autoComplete="off" 
             required 
@@ -97,8 +105,8 @@ const Login = () => {
           <input 
             name="user-password" 
             type="password" 
-            value={userPassword}
-            onChange={onChangeUserPassword}
+            value={password}
+            onChange={onChangePassword}
             placeholder="비밀번호를 입력해주세요" 
             autoComplete="off" 
             required 

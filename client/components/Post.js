@@ -80,7 +80,7 @@ moment.locale('ko');
 
 const Post = ({ post }) => {
 
-  const [commentBox, setCommentBox] = useState(false)
+  const [commentBox, setCommentBox] = useState(false);
   const onToggle = useCallback(() => {
     setCommentBox(prev => !prev);
   }, [])
@@ -92,7 +92,7 @@ const Post = ({ post }) => {
           <div><Avatar /></div>
           <div className="name-date">
             <div className="name">{post.User.name}</div>
-            <div className="date">{moment().format('YYYY.MM.DD')}</div>
+            <div className="date">{moment(post.createdAt).format('YYYY.MM.DD')}</div>
           </div>
         </div>
         <div className="content">{post.content}</div>
@@ -104,9 +104,9 @@ const Post = ({ post }) => {
           <div>
             <CommentForm post={post} />
             {post.Comments.map(comment => 
-              <StyledComment>
-                <span className="uesrid">{comment.name}</span>
-                <span className="text">{comment.text}</span>
+              <StyledComment key={comment.id}>
+                <span className="uesrid">{comment.User.name}</span>
+                <span className="text">{comment.content}</span>
               </StyledComment>
             )}
           </div>
@@ -118,7 +118,7 @@ const Post = ({ post }) => {
 
 Post.proptypes = {
   post: PropTypes.shape({
-    id: PropTypes.string,       // 백엔드랑 합치면 number로 바꾸기
+    id: PropTypes.number,
     content: PropTypes.string,
     User: PropTypes.object,
     Comments: PropTypes.arrayOf(PropTypes.object)

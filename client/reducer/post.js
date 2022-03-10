@@ -1,9 +1,8 @@
 import produce from "immer";
-import shortid from "shortid";
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+export const ALL_POST_REQUEST = 'ALL_POST_REQUEST';
+export const ALL_POST_SUCCESS = 'ALL_POST_SUCCESS';
+export const ALL_POST_FAILURE = 'ALL_POST_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -14,9 +13,9 @@ export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 export const initialState = {
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
+  allPostLoading: false,
+  allPostDone: false,
+  allPostError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -26,18 +25,23 @@ export const initialState = {
   allPost: []
 }
 
-export const DummyPost = (data) => ({
-  id: shortid.generate(),
-  content: data.content,
-  Comments: [],
-  User: {
-    id: data.userId,
-    name: data.userName
-  }
-})
-
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch(action.type) {
+    case ALL_POST_REQUEST:
+      draft.allPostLoading = true;
+      draft.allPostDone = false;
+      draft.allPostError = null;
+      break;
+    case ALL_POST_SUCCESS:
+      draft.allPostLoading = false;
+      draft.allPostDone = true;
+      draft.allPost = draft.allPost.concat(action.data)
+      break;
+    case ALL_POST_FAILURE:
+      draft.allPostLoading = false;
+      draft.allPostDone = false;
+      draft.allPostError = action.error;
+    
     case ADD_POST_REQUEST:
       draft.addPostLoading = true;
       draft.addPostDone = false;
@@ -46,8 +50,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_SUCCESS:
       draft.addPostLoading = false;
       draft.addPostDone = true;
-      draft.allPost.unshift(DummyPost(action.data));
-      console.log(action.data);
+      draft.allPost.unshift(action.data);
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;
@@ -62,7 +65,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_COMMENT_SUCCESS:
       draft.commentLoading = false;
       draft.commentDone = true;
-      const post = draft.allPost.find((value) => value.id === action.data.postId);
+      const post = draft.allPost.find((value) => value.id === action.data.PostId);
       post.Comments.unshift(action.data);
       break;
     case ADD_COMMENT_FAILURE:

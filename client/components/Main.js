@@ -1,9 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Styled from "styled-components";
 
 import PostForm from "./PostForm";
 import Post from "./Post";
+import { ALL_POST_REQUEST } from "../reducer/post";
 
 
 const StyledWrap = Styled.div`
@@ -16,7 +17,14 @@ const StyledWrap = Styled.div`
 `
 const Main = () => {
   
+  const dispatch = useDispatch();
   const { allPost } = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch({
+      type: ALL_POST_REQUEST
+    });
+  },[]);
 
   return (
     <StyledWrap>

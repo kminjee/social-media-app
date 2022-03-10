@@ -9,3 +9,18 @@
 2. request -> success 로 처리됐는데도 state 변화 없는 경우
 
   : 원인 - reducer에서 case마다 break를 붙이지 않음.
+
+
+3. 대부분 undefined으로 값을 불러오지 못하거나, null값으로 인해 반복문에서 오류나는 경우
+
+  1) request 처리 후 state값 변화나 object에 값이 제대로 들어갔는지 확인
+  2) reducer에서 console.log로 action.data값 찍어보기
+
+
+---------------------------------------
+
+
+4.  Error: Unknown database 'react-project'
+
+
+npx sequelize db:create 를 해줘야 db가 생성됨
