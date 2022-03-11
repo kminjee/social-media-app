@@ -25,22 +25,28 @@ const StyledNav = Styled.div`
     color: #666;
   }
 `;
-const StyledBtn = Styled.button`
-  border: none;
-  padding-top: 0.3rem;
+const StyledInfo = Styled.div`
   font-size: 0.875rem;
   color: #666;
-  background: none;
-  cursor: pointer;
+  cursor: default;
 
-  :hover {
-    color: #000;
+  & button {
+    border: none;
+    padding-top: 0.3rem;
+    font-size: 0.875rem;
+    color: #666;
+    background: none;
+    cursor: pointer;
+  
+    :hover {
+      color: #000;
+    }
   }
 `;
 
 const Layout = ({ children }) => {
 
-  const { loginDone } = useSelector((state) => state.user);
+  const { loginDone, info } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
@@ -56,9 +62,10 @@ const Layout = ({ children }) => {
           <div>
             <Link href="/"><a>메인</a></Link>
           </div>
-          <div>
-            <StyledBtn onClick={onLogout}> 로그아웃</StyledBtn> 
-          </div>
+          <StyledInfo>
+            {info.name}님 | 
+            <button onClick={onLogout}> 로그아웃</button> 
+          </StyledInfo>
         </StyledNav>
       }
       <div>{children}</div>

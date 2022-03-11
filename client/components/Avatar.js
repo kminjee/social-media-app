@@ -2,22 +2,19 @@ import React from "react";
 import Styled from "styled-components";
 
 
-const StyledAvatar = Styled.div`
+const StyledAvatar = Styled.img`
   box-sizing: border-box;
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
   vertical-align: middle;
-  background: #4F5681;
   text-align: center;
-  font-size: 13px;
-  color: #FFF;
 `
 
 const Avatar = () => {
+
   return (
-    <StyledAvatar></StyledAvatar>
+    <StyledAvatar src="https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-512.png"></StyledAvatar>
   )
 }
 

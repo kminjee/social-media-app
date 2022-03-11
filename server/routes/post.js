@@ -61,6 +61,45 @@ router.post('/', async (req, res, next) => {
 });
 
 
+/* 글 수정 */
+router.patch('/:postId', async (req, res, next) => {
+  try {
+    await Post.update({
+      content: req.body.content
+    }, {
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id
+      }
+    });
+    res.status(200).json({
+      PostId: parseInt(req.params.postId, 10),
+      content: req.body.content
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
+/* 글 삭제 */
+router.delete('/:postId', async (req, res, next) => {
+  try {
+    await Post.destroy({
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id
+      }
+    });
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
 /* 댓글 등록 */
 router.post('/:postId/comment', async (req, res, next) => {
   try {
@@ -77,6 +116,27 @@ router.post('/:postId/comment', async (req, res, next) => {
       }]
     });
     res.status(201).json(fullComment);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
+/* 댓글 삭제 */
+router.delete('/:postId/:commentId', async (req, res, next) => {
+  try {
+    await Comment.destroy({
+      where: {
+        id: req.params.commentId,
+        PostId: req.params.postId,
+        UserId: req.user.id
+      }
+    });
+    res.status(200).json({ 
+      PostId: parseInt(req.params.postId, 10),
+      commentId: parseInt(req.params.commentId, 10),
+    });
   } catch (err) {
     console.error(err);
     next(err);

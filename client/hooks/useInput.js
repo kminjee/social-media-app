@@ -8,5 +8,5 @@ export default (initialstate = null) => {
     setValue(event.target.value);
   }, [])
 
-  return [value, handler];
+  return [value, handler, setValue];
 }

@@ -28,7 +28,6 @@ function* signup(action) {
   }
 };
 
-
 /* 로그인 */
 function loginAPI(data) {
   return axios.post('/user/login', data);
@@ -50,7 +49,6 @@ function* login(action) {
   }
 };
 
-
 /* 로그아웃 */
 function logoutAPI() {
   return axios.post('/user/logout');
@@ -70,7 +68,6 @@ function* logout() {
     });
   }
 };
-
 
 /* 유저 정보 */
 function loadUserAPI() {
