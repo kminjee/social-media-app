@@ -35,9 +35,11 @@ $ npm run dev &nbsp; (클라이언트 실행) <br/>
 
 # 프로젝트 중 생긴 문제 해결
 ### 1. 로그인 후 정보를 불러오지 못하는 상황
-  (1) console.log에 undefined로 값을 불러오지 못한 것과 Network 탭에서 401 error를 먼저 확인해서 클라이언트 측 오류를 확인함 <br/>
-  (2) 다시 console.log를 확인해서 'redux-saga' 에러 문구가 많은 것을 보고 saga 쪽에 문제가 있는지 찾아봄 <br/>
-  (3) **API 호출 후에 return으로 값을 받아오지 않아서 생긴 문제임을 알고 return을 추가하여 값 받아오기 해결함** <br/>
+  (1) console.log에 undefined로 값을 불러오지 못한 것을 확인함 <br/>
+  (2) 포스트맨을 통해 한번 더 확인함 <br/>
+  (3) Network 탭에서 401 error를 먼저 확인해서 클라이언트 측 오류를 확인함 <br/>
+  (4) 다시 console.log를 확인해서 'redux-saga' 에러 문구가 많은 것을 보고 saga 쪽에 문제가 있는지 찾아봄 <br/>
+  (5) **API 호출 후에 return으로 값을 받아오지 않아서 생긴 문제임을 알고 return을 추가하여 값 받아오기 해결함** <br/>
 <br/>
 
 ### 2. 새로고침 시 로그인이 풀리는 현상
