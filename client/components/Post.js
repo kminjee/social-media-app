@@ -78,9 +78,11 @@ const StyledComment = Styled.div`
 `
 moment.locale('ko');
 
+
 const Post = ({ post }) => {
 
   const [commentBox, setCommentBox] = useState(false);
+
   const onToggle = useCallback(() => {
     setCommentBox(prev => !prev);
   }, [])

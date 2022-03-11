@@ -3,7 +3,8 @@ import { all, call, delay, put, fork, takeLatest } from "redux-saga/effects";
 import { 
   SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, 
-  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
+  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, 
+  LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE
 } from "../reducer/user";
 
 
@@ -34,7 +35,6 @@ function loginAPI(data) {
 };
 
 function* login(action) {
-  console.log(action)
   try {
     const result = yield call(loginAPI, action.data);
     yield put({
@@ -72,6 +72,28 @@ function* logout() {
 };
 
 
+/* 유저 정보 */
+function loadUserAPI() {
+  return axios.get('/user');
+};
+
+function* loadUser() {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.log(err);
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data
+    });
+  }
+};
+
+
 function* watchSignup() {
   yield takeLatest(SIGNUP_REQUEST, signup);
 };
@@ -84,10 +106,15 @@ function* watchLogout() {
   yield takeLatest(LOGOUT_REQUEST, logout);
 };
 
+function* watchLoadUser() {
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
+};
+
 export default function* userSaga() {
   yield all([
     fork(watchSignup),
     fork(watchLogin),
-    fork(watchLogout)
+    fork(watchLogout),
+    fork(watchLoadUser)
   ]);
 };

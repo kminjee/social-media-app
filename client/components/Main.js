@@ -5,6 +5,7 @@ import Styled from "styled-components";
 import PostForm from "./PostForm";
 import Post from "./Post";
 import { ALL_POST_REQUEST } from "../reducer/post";
+import { LOAD_USER_REQUEST } from "../reducer/user";
 
 
 const StyledWrap = Styled.div`
@@ -19,7 +20,7 @@ const Main = () => {
   
   const dispatch = useDispatch();
   const { allPost } = useSelector((state) => state.post);
-
+  
   useEffect(() => {
     dispatch({
       type: ALL_POST_REQUEST
