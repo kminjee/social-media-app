@@ -16,18 +16,11 @@ const Home = () => {
   const dispatch = useDispatch();
   const { loginDone } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_USER_REQUEST
-    });
-  }, []);
-
-
   return (
     <Layout>
       <Head>
         <meta charSet="utf-8" />
-        <title>{loginDone ? "메인 | toystory" : "로그인 | toystory"}</title>
+        <title>{loginDone ? "메인" : "로그인"}</title>
       </Head>
       {loginDone ? <Main /> : <Login />}
     </Layout>

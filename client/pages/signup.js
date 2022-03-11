@@ -120,7 +120,7 @@ const Signup = () => {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>회원가입 | 토이스토리</title>
+        <title>회원가입</title>
       </Head>
       <SignupForm onSubmit={onSubmit}>
         <h1>회원가입</h1>

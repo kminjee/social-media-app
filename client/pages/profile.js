@@ -8,7 +8,7 @@ const Profile = () => {
     <Layout>
       <Head>
         <meta charSet="utf-8" />
-        <title>내 프로필 | 토이스토리</title>
+        <title>내 프로필</title>
       </Head>
       <div>프로필 페이지</div>
     </Layout>
