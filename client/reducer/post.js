@@ -24,6 +24,10 @@ export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
 export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
 
+export const ADD_REPLY_REQUEST = 'ADD_REPLY_REQUEST';
+export const ADD_REPLY_SUCCESS = 'ADD_REPLY_SUCCESS';
+export const ADD_REPLY_FAILURE = 'ADD_REPLY_FAILURE';
+
 export const initialState = {
   allPostDone: false,
   allPostError: null,
@@ -37,6 +41,8 @@ export const initialState = {
   addCommentError: null,
   removeCommentDone: false,
   removeCommentError: null,
+  addReplyDone: false,
+  addReplyError: null,
   allPost: []
 }
 
@@ -119,6 +125,21 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentDone = false;
       draft.removeCommentError = action.error; 
+
+    /* 답글 등록 */
+    case ADD_REPLY_REQUEST:
+      draft.addCommentDone = false;
+      draft.addCommentError = null;
+      break;
+    case ADD_REPLY_SUCCESS:
+      draft.addCommentDone = true;
+      draft.allPost.find((value) => value.id === action.data.PostId)
+        .Comments.find((value) => value.id === action.data.CommentId)
+        .Replies.unshift(action.data);
+      break;
+    case ADD_REPLY_FAILURE:
+      draft.addCommentDone = false;
+      draft.addCommentError = action.error; 
 
     default:
       break;

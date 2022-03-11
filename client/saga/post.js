@@ -7,6 +7,7 @@ import {
   UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE, 
   REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   REMOVE_COMMENT_REQUEST, REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_FAILURE, 
+  ADD_REPLY_REQUEST, ADD_REPLY_SUCCESS, ADD_REPLY_FAILURE,
 } from "../reducer/post";
 
 
@@ -136,6 +137,27 @@ function* removeComment(action) {
   }
 };
 
+/* 대댓글 등록 */
+function addReplyAPI(data) {
+  return axios.post(`/post/${data.PostId}/${data.CommentId}/reply`, data);
+};
+
+function* addReply(action) {
+  try {
+    const result = yield call(addReplyAPI, action.data);
+    yield put({
+      type: ADD_REPLY_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.log(err);
+    yield put({
+      type: ADD_REPLY_FAILURE,
+      error: err.response.data
+    });
+  }
+};
+
 
 function* watchAllPost() {
   yield takeLatest(ALL_POST_REQUEST, allPost);
@@ -161,6 +183,10 @@ function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 };
 
+function* watchAddReply() {
+  yield takeLatest(ADD_REPLY_REQUEST, addReply);
+};
+
 
 export default function* postSaga() {
   yield all([
@@ -170,5 +196,6 @@ export default function* postSaga() {
     fork(watchRemovePost),
     fork(watchAddComment),
     fork(watchRemoveComment),
+    fork(watchAddReply)
   ]);
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Post, User, Comment } = require('../models');
+const { Post, User, Comment, Reply } = require('../models');
 
 
 /* 글 목록 */
@@ -22,6 +22,12 @@ router.get('/', async(req, res, next) => {
         include: [{
           model: User,
           attributes: ['id', 'name']
+        }, {
+          model: Reply,
+          include: [{
+            model: User,
+            attributes: ['id', 'name']
+          }]
         }]
       }]
     });
@@ -113,9 +119,36 @@ router.post('/:postId/comment', async (req, res, next) => {
       include: [{
         model: User,
         attributes: ['id', 'name']
+      }, {
+        model: Reply,
+        attributes: ['id', 'name', 'content']
       }]
     });
     res.status(201).json(fullComment);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
+/* 대댓글 등록 */
+router.post('/:postId/:commentId/reply', async (req, res, next) => {
+  try {
+    const reply = await Reply.create({
+      content: req.body.content,
+      PostId: parseInt(req.params.postId),
+      CommentId: parseInt(req.params.commentId),
+      UserId:req.user.id
+    });
+    const fullReply = await Reply.findOne({
+      where: { id: reply.id },
+      include: [{
+        model: User,
+        attributes: ['id', 'name']
+      }]
+    });
+    res.status(201).json(fullReply);
   } catch (err) {
     console.error(err);
     next(err);

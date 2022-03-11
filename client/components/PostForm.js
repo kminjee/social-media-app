@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 
@@ -51,10 +51,17 @@ const StyledPostForm = Styled.form`
 
 const PostForm = () => {
   
-  const { info } = useSelector((state) => state.user)
+  const { info } = useSelector((state) => state.user);
+  const { addPostDone } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
-  const [content, onChangeContent] = useInput('')
+  const [content, onChangeContent, setContent] = useInput('')
+
+  useEffect(() => {
+    if (addPostDone) {
+      setContent('');
+    }
+  }, [addPostDone])
 
   const onSubmit = useCallback((event) => {
     event.preventDefault();

@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     collate: 'utf8mb4_general_ci'
   });
   Reply.associate = (db) => {
+    db.Reply.belongsTo(db.User);
+    db.Reply.belongsTo(db.Post);
     db.Reply.belongsTo(db.Comment);
   };
   return Reply;

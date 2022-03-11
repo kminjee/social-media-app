@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
   const onLogout = useCallback(() => {
     dispatch({
       type: LOGOUT_REQUEST
-    })
+    });
   });
 
   return (

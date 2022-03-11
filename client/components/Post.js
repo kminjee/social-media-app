@@ -6,7 +6,10 @@ import Styled from "styled-components";
 
 import Avatar from "./Avatar";
 import CommentForm from "./CommentForm";
+import useInput from "../hooks/useInput";
+
 import { REMOVE_COMMENT_REQUEST, REMOVE_POST_REQUEST, UPDATE_POST_REQUEST } from "../reducer/post";
+import ReplyForm from "./ReplyForm";
 
 
 const StyledPost = Styled.div`
@@ -100,22 +103,35 @@ const StyledPost = Styled.div`
 const StyledComment = Styled.div`
   box-sizing: border-box;
   display: flex;
+  flex-direction : row;
+  flex-wrap : wrap;
   padding: 0.2rem 0;
   font-size: 0.75rem;
 
   & .uesrid {
-    width: 20%;
+    width: 14%;
     color: #666;
   }
   
   & .text {
-    width: 70%;
+    width: 72%;
     font-size: 0.75rem;
     color: #666;
   }
 
+  & .replyBtn {
+    width: 7%;
+    font-size: 0.75rem;
+    color: #666;
+    cursor: pointer;
+  }
+
+  & .replyBtn:hover {
+    color: #000;
+  }
+
   & .removeBtn {
-    width: 10%;
+    width: 7%;
     text-align: right;
     font-size: 0.75rem;
     color: #666;
@@ -124,6 +140,10 @@ const StyledComment = Styled.div`
 
   & .removeBtn:hover {
     color: #000;
+  }
+
+  & .replyForm {
+    width: 100%;
   }
 `
 moment.locale('ko');
@@ -137,7 +157,9 @@ const Post = ({ post }) => {
   const [commentBox, setCommentBox] = useState(false);
   const [myPost, setMyPost] = useState(false);
   const [editPost, setEditPost] = useState(false);
-  const [content, setContent] = useState(post.content);
+  const [replyToggle, setReplyToggle] = useState(0);
+
+  const [content, onChangeContent] = useInput(post.content);
 
   useEffect (() => {
     if (post.User.id === info.id) {
@@ -145,14 +167,15 @@ const Post = ({ post }) => {
     }
   }, [info.id]);
 
-  const onToggle = useCallback(() => {
+  const onToggleComment = useCallback((e) => {
+    e.preventDefault();
     setCommentBox(prev => !prev);
   }, []);
 
-  const onChangeContent = useCallback((e) => {
+  const onToggleReply = useCallback((commentId) => (e) => {
     e.preventDefault();
-    setContent(e.target.value);
-  }, [content]);
+    setReplyToggle(commentId);
+  }, [])
 
   const onUpdatePost = useCallback((e) => {
     e.preventDefault();
@@ -220,13 +243,12 @@ const Post = ({ post }) => {
             />
             <button className="editBtn updateBtn" onClick={onUpdatePost}>수정하기</button>
           </div>
-
           : 
           <div className="content">{post.content}</div>
         }
-        <div className="comment" onClick={onToggle}>
+        <div className="comment" onClick={onToggleComment}>
           <div className="total">댓글 {post.Comments.length}개</div>
-          <div className="btn">댓글 달기</div>
+          <div className="commentBtn">댓글 달기</div>
         </div>
         {commentBox && 
           <div>
@@ -235,7 +257,9 @@ const Post = ({ post }) => {
               <StyledComment key={comment.id}>
                 <span className="uesrid">{comment.User.name}</span>
                 <span className="text">{comment.content}</span>
-                <span className="removeBtn" onClick={onRemoveComment(comment.id)}>삭제</span>
+                <span className="replyBtn" onClick={onToggleReply(comment.id)}>답글</span>
+                {comment.User.id === info.id && <span className="removeBtn" onClick={onRemoveComment(comment.id)}>삭제</span>}
+                {comment.id === replyToggle && <div className="replyForm"><ReplyForm postId={post.id} commentId={comment.id} /></div>}
               </StyledComment>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 
@@ -49,7 +49,14 @@ const CommentForm = ({ post }) => {
 
   const dispatch = useDispatch();
   const { info } = useSelector((state) => state.user);
-  const [comment, onChangeComment] = useInput('');
+  const { addCommentDone } = useSelector((state) => state.post);
+  const [comment, onChangeComment, setComment] = useInput('');
+
+  useEffect(() => {
+    if (addCommentDone) {
+      setComment('');
+    }
+  }, [addCommentDone])
 
   const onSubmit = useCallback((event) => {
     event.preventDefault();
@@ -60,7 +67,7 @@ const CommentForm = ({ post }) => {
         UesrId: info.id,
         content: comment
       }
-    })
+    });
   }, [comment])
 
   return (

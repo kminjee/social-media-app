@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { END } from "redux-saga";
 import wrapper from '../store/configureStore';
 import axios from "axios";
@@ -13,7 +13,6 @@ import { LOAD_USER_REQUEST } from "../reducer/user";
 
 const Home = () => {
 
-  const dispatch = useDispatch();
   const { loginDone } = useSelector((state) => state.user);
 
   return (
