@@ -4,8 +4,8 @@ dotenv.config();
 
 module.exports = {
   "development": {
-    "username": "root",
-    "password": process.env.DB_PASSWORD,
+    "username": "root",                   // mysql 계정이름
+    "password": process.env.DB_PASSWORD,  // mysql 비밀번호
     "database": "react-project",
     "host": "127.0.0.1",
     "port": "3306",
