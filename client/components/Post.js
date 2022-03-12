@@ -6,11 +6,10 @@ import Styled from "styled-components";
 
 import Avatar from "./Avatar";
 import CommentForm from "./CommentForm";
+import Comment from "./Comment";
 import useInput from "../hooks/useInput";
 
-import { REMOVE_COMMENT_REQUEST, REMOVE_POST_REQUEST, UPDATE_POST_REQUEST } from "../reducer/post";
-import ReplyForm from "./ReplyForm";
-
+import { REMOVE_POST_REQUEST, UPDATE_POST_REQUEST } from "../reducer/post";
 
 const StyledPost = Styled.div`
   box-sizing: border-box;
@@ -100,54 +99,8 @@ const StyledPost = Styled.div`
   }
 
 `
-const StyledComment = Styled.div`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction : row;
-  flex-wrap : wrap;
-  padding: 0.2rem 0;
-  font-size: 0.75rem;
 
-  & .uesrid {
-    width: 14%;
-    color: #666;
-  }
-  
-  & .text {
-    width: 72%;
-    font-size: 0.75rem;
-    color: #666;
-  }
-
-  & .replyBtn {
-    width: 7%;
-    font-size: 0.75rem;
-    color: #666;
-    cursor: pointer;
-  }
-
-  & .replyBtn:hover {
-    color: #000;
-  }
-
-  & .removeBtn {
-    width: 7%;
-    text-align: right;
-    font-size: 0.75rem;
-    color: #666;
-    cursor: pointer;
-  }
-
-  & .removeBtn:hover {
-    color: #000;
-  }
-
-  & .replyForm {
-    width: 100%;
-  }
-`
 moment.locale('ko');
-
 
 const Post = ({ post }) => {
 
@@ -157,8 +110,6 @@ const Post = ({ post }) => {
   const [commentBox, setCommentBox] = useState(false);
   const [myPost, setMyPost] = useState(false);
   const [editPost, setEditPost] = useState(false);
-  const [replyToggle, setReplyToggle] = useState(0);
-
   const [content, onChangeContent] = useInput(post.content);
 
   useEffect (() => {
@@ -171,11 +122,6 @@ const Post = ({ post }) => {
     e.preventDefault();
     setCommentBox(prev => !prev);
   }, []);
-
-  const onToggleReply = useCallback((commentId) => (e) => {
-    e.preventDefault();
-    setReplyToggle(commentId);
-  }, [])
 
   const onUpdatePost = useCallback((e) => {
     e.preventDefault();
@@ -197,84 +143,53 @@ const Post = ({ post }) => {
     });
   }, []);
 
-  const onRemoveComment = useCallback((commentId) => (e) => {
-    e.preventDefault();
-    dispatch({
-      type: REMOVE_COMMENT_REQUEST,
-      data: {
-        PostId: post.id,
-        commentId : commentId
-      }
-    })
-  }, []);
-
   return(
-    <> 
-      <StyledPost key={post.id}>
-        <div className="info">
-          <div className="inner">
-            <Avatar />
-            <div className="name-date">
-              <div className="name">{post.User.name}</div>
-              <div className="date">{moment(post.createdAt).format('YYYY.MM.DD')}</div>
-            </div>
+    <StyledPost key={post.id}>
+      <div className="info">
+        <div className="inner">
+          <Avatar />
+          <div className="name-date">
+            <div className="name">{post.User.name}</div>
+            <div className="date">{moment(post.createdAt).format('YYYY.MM.DD')}</div>
           </div>
-          {myPost &&
-            <div>          
-              <button 
-                className="editBtn" 
-                onClick={() => { 
-                  setEditPost(prev => !prev);
-                }}
-              >수정</button>
-              <button className="editBtn" onClick={onRemovePost}>삭제</button>
-            </div>
-          }
         </div>
-        {editPost 
-          ? 
-          <div>
-            <textarea 
-              cols="80" 
-              rows="5" 
-              value={content}
-              onChange={onChangeContent}
-              autoComplete="off"
-            />
-            <button className="editBtn updateBtn" onClick={onUpdatePost}>수정하기</button>
-          </div>
-          : 
-          <div className="content">{post.content}</div>
-        }
-        <div className="comment" onClick={onToggleComment}>
-          <div className="total">댓글 {post.Comments.length}개</div>
-          <div className="commentBtn">댓글 달기</div>
-        </div>
-        {commentBox && 
-          <div>
-            <CommentForm post={post} />
-            {post.Comments.map(comment => 
-              <StyledComment key={comment.id}>
-                <span className="uesrid">{comment.User.name}</span>
-                <span className="text">{comment.content}</span>
-                <span className="replyBtn" onClick={onToggleReply(comment.id)}>답글</span>
-                {comment.User.id === info.id && <span className="removeBtn" onClick={onRemoveComment(comment.id)}>삭제</span>}
-                {comment.id === replyToggle && <div className="replyForm"><ReplyForm postId={post.id} commentId={comment.id} /></div>}
-              </StyledComment>
-            )}
+        {myPost &&
+          <div>          
+            <button className="editBtn" onClick={() => { setEditPost(prev => !prev) }}>수정</button>
+            <button className="editBtn" onClick={onRemovePost}>삭제</button>
           </div>
         }
-      </StyledPost>
-    </>
+      </div>
+      {editPost ? 
+        <>
+          <textarea cols="80" rows="5" value={content} onChange={onChangeContent} />
+          <button className="editBtn updateBtn" onClick={onUpdatePost}>수정하기</button>
+        </>
+        : <div className="content">{post.content}</div>
+      }
+      <div className="comment" onClick={onToggleComment}>
+        <div className="total">댓글 {post.Comments.length}개</div>
+        <div className="commentBtn">댓글 달기</div>
+      </div>
+      {commentBox && 
+        <>
+          <CommentForm post={post} />
+          {post.Comments.map(comment => 
+            <Comment key={comment.id} postId={post.id} comment={comment} />
+          )}
+        </>
+      }
+    </StyledPost>
   )
 }
 
-Post.proptypes = {
+Post.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,
     User: PropTypes.object,
-    Comments: PropTypes.arrayOf(PropTypes.object)
+    Comments: PropTypes.arrayOf(PropTypes.object),
+    Reply: PropTypes.arrayOf(PropTypes.object)
   }).isRequired
 }
 

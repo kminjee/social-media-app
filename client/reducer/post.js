@@ -28,6 +28,10 @@ export const ADD_REPLY_REQUEST = 'ADD_REPLY_REQUEST';
 export const ADD_REPLY_SUCCESS = 'ADD_REPLY_SUCCESS';
 export const ADD_REPLY_FAILURE = 'ADD_REPLY_FAILURE';
 
+export const REMOVE_REPLY_REQUEST = 'REMOVE_REPLY_REQUEST';
+export const REMOVE_REPLY_SUCCESS = 'REMOVE_REPLY_SUCCESS';
+export const REMOVE_REPLY_FAILURE = 'REMOVE_REPLY_FAILURE';
+
 export const initialState = {
   allPostDone: false,
   allPostError: null,
@@ -43,6 +47,8 @@ export const initialState = {
   removeCommentError: null,
   addReplyDone: false,
   addReplyError: null,
+  removeReplyDone: false,
+  removeReplyError: null,
   allPost: []
 }
 
@@ -60,6 +66,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ALL_POST_FAILURE:
       draft.allPostDone = false;
       draft.allPostError = action.error;
+      break;
     
     /* 글 등록 */
     case ADD_POST_REQUEST:
@@ -73,6 +80,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_FAILURE:
       draft.addPostDone = false;
       draft.addPostError = action.error;
+      break;
 
     /* 글 수정 */
     case UPDATE_POST_REQUEST:
@@ -86,6 +94,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UPDATE_POST_FAILURE:
       draft.updatePostDone = false;
       draft.updatePostError = action.error;
+      break;
 
     /* 글 삭제 */
     case REMOVE_POST_REQUEST:
@@ -99,6 +108,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_POST_FAILURE:
       draft.updatePostDone = false;
       draft.updatePostError = action.error;
+      break;
 
     /* 댓글 등록 */
     case ADD_COMMENT_REQUEST:
@@ -111,7 +121,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_COMMENT_FAILURE:
       draft.addCommentDone = false;
-      draft.addCommentError = action.error; 
+      draft.addCommentError = action.error;
+      break; 
 
     /* 댓글 삭제 */
     case REMOVE_COMMENT_REQUEST:
@@ -120,26 +131,49 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case REMOVE_COMMENT_SUCCESS:
       draft.removeCommentDone = true;
-      draft.allPost.find((value) => value.id === action.data.PostId).Comments = draft.allPost.find((value) => value.id === action.data.PostId).Comments.filter((value) => value.id !== action.data.commentId);
+      draft.allPost.find((value) => value.id === action.data.PostId).Comments = 
+      draft.allPost.find((value) => value.id === action.data.PostId).Comments.filter((value) => value.id !== action.data.commentId);
       break;
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentDone = false;
       draft.removeCommentError = action.error; 
+      break;
 
-    /* 답글 등록 */
+    /* 대댓글 등록 */
     case ADD_REPLY_REQUEST:
-      draft.addCommentDone = false;
-      draft.addCommentError = null;
+      draft.addReplyDone = false;
+      draft.addReplyError = null;
       break;
     case ADD_REPLY_SUCCESS:
-      draft.addCommentDone = true;
-      draft.allPost.find((value) => value.id === action.data.PostId)
+      draft.addReplyDone = true;
+      draft
+        .allPost.find((value) => value.id === action.data.PostId)
         .Comments.find((value) => value.id === action.data.CommentId)
         .Replies.unshift(action.data);
       break;
     case ADD_REPLY_FAILURE:
-      draft.addCommentDone = false;
-      draft.addCommentError = action.error; 
+      draft.addReplyDone = false;
+      draft.addReplyError = action.error; 
+      break;
+
+    /* 대댓글 삭제 */
+    case REMOVE_REPLY_REQUEST:
+      draft.removeReplyDone = false;
+      draft.removeReplyError = null;
+      break;
+    case REMOVE_REPLY_SUCCESS:
+      draft.removeReplyDone = true;
+      draft
+        .allPost.find((value) => value.id === action.data.PostId)
+        .Comments.find((value) => value.id === action.data.CommentId).Replies = 
+        draft
+        .allPost.find((value) => value.id === action.data.PostId)
+        .Comments.find((value) => value.id === action.data.CommentId).Replies.filter((value) => value.id !== action.data.replyId)
+      break;
+    case REMOVE_REPLY_FAILURE:
+      draft.removeReplyDone = false;
+      draft.removeReplyError = action.error; 
+      break;
 
     default:
       break;

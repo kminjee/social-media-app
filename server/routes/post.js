@@ -121,7 +121,10 @@ router.post('/:postId/comment', async (req, res, next) => {
         attributes: ['id', 'name']
       }, {
         model: Reply,
-        attributes: ['id', 'name', 'content']
+        include: [{
+          model: User,
+          attributes: ['id', 'name']
+        }]
       }]
     });
     res.status(201).json(fullComment);
@@ -175,5 +178,28 @@ router.delete('/:postId/:commentId', async (req, res, next) => {
     next(err);
   }
 });
+
+/* 대댓글 삭제 */
+router.delete('/:postId/:commentId/:replyId', async (req, res, next) => {
+  try {
+    await Reply.destroy({
+      where: {
+        id: req.params.replyId,
+        PostId: req.params.postId,
+        CommentId: req.params.commentId,
+        UserId: req.user.id
+      }
+    });
+    res.status(200).json({ 
+      PostId: parseInt(req.params.postId, 10),
+      CommentId: parseInt(req.params.commentId, 10),
+      replyId: parseInt(req.params.replyId, 10)
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 
 module.exports = router;

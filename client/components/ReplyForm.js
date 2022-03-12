@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
 import Styled from "styled-components";
 
 import useInput from "../hooks/useInput";
@@ -7,53 +8,50 @@ import { ADD_REPLY_REQUEST } from "../reducer/post";
 
 const StyledForm = Styled.form`
   box-sizing: border-box;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
-  padding: 0.5rem 0;
-  
 
-  & span {
-    box-sizing: border-box;
-    width: 15%;
-    text-align: center;
+  & .box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    background: #EEE;
+    width: 97%;
     font-size: 0.75rem;
     color: #666;
-    padding-right: 0.2rem;
-  }
 
-  & input {
-    box-sizing: border-box;
-    width: 85%;
-    padding: 0.2rem;
-    border: 1px solid #DDD;
-    border-right: none;
-    font-size: 0.75rem;
-    color: #666;
-    vertical-align: middle;
-  }
+    & div {
+      box-sizing: border-box;
+      width: 12%;
+      padding: 0.2rem;
+      text-align: center;
+    }
 
-  & input::placeholder {
-    color: #CCC;
-    vertical-align: middle;
-  }
+    & input {
+      box-sizing: border-box;
+      width: 100%;
+      border: none;
+      padding: 0.2rem;
+    }
 
-  & input:focus {
-    outline: none;
-    border: 1px solid #7784cc;
-    box-shadow: 0 0 0 0.1rem rgb(59 65 99 / 25%);
-  }
+    & input::placeholder {
+      color: #CCC;
+      font-size: 0.75rem;
+    }
 
-  & button {
-    box-sizing: border-box;
-    width: 10%;
-    padding: 0.1rem;
-    border: 1px solid #DDD;
-    border-left: none;
-    font-size: 0.75rem;
-    color: #666;
-    background: none;
-    cursor: pointer;
+    & button {
+      box-sizing: border-box;
+      width: 8%;
+      background: none;
+      border: none;
+      padding: 0.2rem;
+      font-size: 0.75rem;
+      color: #666;
+      cursor: pointer;
+    }
   }
 `
 
@@ -84,16 +82,25 @@ const ReplyForm = ({ postId, commentId }) => {
 
   return (
     <StyledForm onSubmit={onSubmit}>
-      <span>{info.name}</span>
-      <input 
-        type="text" 
-        value={reply}
-        onChange={onChangeReply}
-        placeholder="답글을 남겨주세요" 
-      />
-      <button type="submit">등록</button>
+      <div></div>
+      <div className="box">
+        <div>{info.name}</div>
+        <input 
+          type="text" 
+          value={reply}
+          onChange={onChangeReply}
+          placeholder="답글을 남겨주세요" 
+        />
+        <button type="submit">등록</button>
+      </div>
+
     </StyledForm>
   )
-}
+};
+
+ReplyForm.propTypes = {
+  postId: PropTypes.number.isRequired,
+  commentId: PropTypes.number.isRequired,
+};
 
 export default ReplyForm;
