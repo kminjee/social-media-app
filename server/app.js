@@ -1,33 +1,30 @@
-const express = require('express');
-const session = require('express-session');
+const express = require('express'); 
 const cors = require('cors');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
-const app = express();
-const db = require('./models');
-const userRouter = require('./routes/user');
+
 const postRouter = require('./routes/post');
+const userRouter = require('./routes/user');
+const db = require('./models');
 const passportConfig = require('./passport');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 
 dotenv.config();
-
+const app = express(); 
 db.sequelize.sync()
   .then(() => { console.log('DB 연결 성공!'); })
   .catch(console.error);
-
 passportConfig();
 
-app.use(cors({
+app.use(cors({ 
   origin: true,
   credentials: true
 }));
-app.use(express.static('public'));
-app.use(express.urlencoded( { extended: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.json());
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
   saveUninitialized: false,
   resave: false,
@@ -36,11 +33,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-app.use('/user', userRouter);
 app.use('/post', postRouter);
+app.use('/user', userRouter);
 
 app.listen(3030, () => {
-  console.log('3030 포트번호로 서버 실행 중..')
+  console.log('3030 서버 실행중...')
 });

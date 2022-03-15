@@ -26,7 +26,6 @@ const Home = () => {
   )
 };
 
-
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
